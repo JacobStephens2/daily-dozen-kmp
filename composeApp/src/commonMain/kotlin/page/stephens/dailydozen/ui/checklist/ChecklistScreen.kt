@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.viewmodel.koinViewModel
 import page.stephens.dailydozen.ui.components.DozenRow
 
 /**
@@ -31,7 +31,7 @@ import page.stephens.dailydozen.ui.components.DozenRow
 @Composable
 fun ChecklistScreen(
     modifier: Modifier = Modifier,
-    viewModel: ChecklistViewModel = viewModel { ChecklistViewModel() },
+    viewModel: ChecklistViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

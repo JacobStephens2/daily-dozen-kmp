@@ -37,4 +37,5 @@ dependencies {
     // Compose Android artifacts, versions managed by the Compose MP plugin.
     implementation(compose.runtime)
     implementation(compose.ui)
+    implementation(libs.koin.android)
 }
