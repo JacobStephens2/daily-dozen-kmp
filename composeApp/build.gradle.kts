@@ -6,9 +6,17 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
+    // expect/actual classes (DatabaseDriverFactory) are still flagged Beta; the
+    // pattern is intentional here, so opt in rather than warn on every build.
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     // ----- Android (consumed by the :androidApp launcher) -----
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -60,9 +68,34 @@ kotlin {
             implementation(libs.lifecycle.runtime.compose)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+
+            // Persistence + DI
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
+            implementation(libs.sqldelight.async)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.android.driver)
+            implementation(libs.koin.android)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.native.driver)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("DailyDozenDb") {
+            packageName.set("page.stephens.dailydozen.db")
+            // Async-generated API so the same schema/queries serve both the
+            // synchronous native drivers (Android/iOS, via Schema.synchronous())
+            // and the async web-worker driver (Wasm).
+            generateAsync.set(true)
         }
     }
 }

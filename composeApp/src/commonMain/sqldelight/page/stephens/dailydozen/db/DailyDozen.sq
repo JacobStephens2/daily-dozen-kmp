@@ -1,0 +1,28 @@
+-- One row per (day, category): how many servings were logged that day.
+-- `day` is an ISO-8601 local date (yyyy-MM-dd). History is just every row
+-- with a day < today, so no separate history table is needed.
+CREATE TABLE servingLog (
+    day        TEXT NOT NULL,
+    categoryId TEXT NOT NULL,
+    count      INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, categoryId)
+);
+
+-- Today's checklist: the logged count for each category on a given day.
+selectForDay:
+SELECT categoryId, count
+FROM servingLog
+WHERE day = ?;
+
+-- Read-only history: every logged cell, newest day first.
+selectHistory:
+SELECT day, categoryId, count
+FROM servingLog
+ORDER BY day DESC, categoryId ASC;
+
+-- Set the absolute count for a cell. INSERT OR REPLACE (rather than an UPSERT
+-- with ON CONFLICT DO UPDATE) keeps us on the baseline SQLite dialect, which
+-- matters because minSdk 26 devices ship SQLite older than UPSERT's 3.24.
+upsert:
+INSERT OR REPLACE INTO servingLog(day, categoryId, count)
+VALUES (?, ?, ?);
