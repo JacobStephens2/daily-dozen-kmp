@@ -9,7 +9,7 @@ lifecycle = "2.8.4"           # org.jetbrains.androidx.lifecycle (KMP build of A
 kotlinx-datetime = "0.6.1"
 kotlinx-coroutines = "1.9.0"
 koin = "4.0.0"
-sqldelight = "2.0.2"
+sqldelight = "2.1.0"           # 2.1.0 is the first with a wasmJs web-worker driver (built w/ Kotlin 2.0.20, klib-compatible with our 2.0.21)
 
 # Android SDK levels
 android-compileSdk = "35"
