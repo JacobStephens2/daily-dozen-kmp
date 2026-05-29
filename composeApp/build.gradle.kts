@@ -85,6 +85,14 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.sqldelight.native.driver)
         }
+        wasmJsMain.dependencies {
+            implementation(libs.sqldelight.web.worker.driver)
+            // sql.js engine + SQLDelight's worker that drives it; copy-webpack-plugin
+            // ships sql.js's wasm blob to the dist root (see webpack.config.d/).
+            implementation(npm("@cashapp/sqldelight-sqljs-worker", "2.1.0"))
+            implementation(npm("sql.js", "1.8.0"))
+            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+        }
     }
 }
 
