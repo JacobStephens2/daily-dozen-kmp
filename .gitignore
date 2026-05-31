@@ -17,8 +17,8 @@ local.properties
 *.aab
 
 # Xcode / iOS
-iosApp/iosApp.xcodeproj/xcuserdata/
-iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+# The .xcodeproj is generated from iosApp/project.yml (XcodeGen), not committed.
+iosApp/iosApp.xcodeproj/
 **/*.xcuserstate
 DerivedData/
 

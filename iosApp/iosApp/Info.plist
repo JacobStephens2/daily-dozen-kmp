@@ -18,6 +18,10 @@
     <string>0.1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+    <!-- Required by Compose Multiplatform on iOS to allow ProMotion 120fps;
+         Compose's PlistSanityCheck throws at launch without it. -->
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
     <key>UILaunchScreen</key>
     <dict/>
     <key>UISupportedInterfaceOrientations</key>
