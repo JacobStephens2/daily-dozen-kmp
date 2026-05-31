@@ -6,12 +6,16 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import page.stephens.dailydozen.data.DozenRepository
-import page.stephens.dailydozen.ui.checklist.ChecklistViewModel
+import page.stephens.dailydozen.net.ApiClient
+import page.stephens.dailydozen.net.AuthManager
+import page.stephens.dailydozen.ui.DailyDozenViewModel
 
-/** Cross-platform wiring: the repository and the ViewModels. */
+/** Cross-platform wiring: the repository, sync layer, and the ViewModel. */
 val appModule: Module = module {
     single { DozenRepository(get()) }
-    viewModelOf(::ChecklistViewModel)
+    single { ApiClient() }
+    single { AuthManager(get(), get(), get()) }
+    viewModelOf(::DailyDozenViewModel)
 }
 
 /**

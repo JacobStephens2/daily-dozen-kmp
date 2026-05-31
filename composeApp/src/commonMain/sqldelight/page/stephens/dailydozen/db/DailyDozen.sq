@@ -1,28 +1,17 @@
--- One row per (day, category): how many servings were logged that day.
--- `day` is an ISO-8601 local date (yyyy-MM-dd). History is just every row
--- with a day < today, so no separate history table is needed.
-CREATE TABLE servingLog (
-    day        TEXT NOT NULL,
-    categoryId TEXT NOT NULL,
-    count      INTEGER NOT NULL DEFAULT 0,
-    PRIMARY KEY (day, categoryId)
+-- The entire app state (profiles, per-day serving indices, settings) is stored
+-- as one JSON blob, serialized with kotlinx.serialization. This mirrors the web
+-- app's localStorage approach and keeps the value shape aligned with the sync
+-- payload, so there is no relational schema to keep in step with the server.
+CREATE TABLE appState (
+    id   INTEGER NOT NULL PRIMARY KEY,
+    json TEXT    NOT NULL
 );
 
--- Today's checklist: the logged count for each category on a given day.
-selectForDay:
-SELECT categoryId, count
-FROM servingLog
-WHERE day = ?;
+-- The single state row lives at id = 0.
+selectState:
+SELECT json FROM appState WHERE id = 0;
 
--- Read-only history: every logged cell, newest day first.
-selectHistory:
-SELECT day, categoryId, count
-FROM servingLog
-ORDER BY day DESC, categoryId ASC;
-
--- Set the absolute count for a cell. INSERT OR REPLACE (rather than an UPSERT
--- with ON CONFLICT DO UPDATE) keeps us on the baseline SQLite dialect, which
--- matters because minSdk 26 devices ship SQLite older than UPSERT's 3.24.
-upsert:
-INSERT OR REPLACE INTO servingLog(day, categoryId, count)
-VALUES (?, ?, ?);
+-- INSERT OR REPLACE (not ON CONFLICT UPSERT) stays on the baseline SQLite
+-- dialect, which matters for minSdk 26 devices shipping pre-3.24 SQLite.
+upsertState:
+INSERT OR REPLACE INTO appState(id, json) VALUES (0, ?);
