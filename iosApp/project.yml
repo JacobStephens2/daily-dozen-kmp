@@ -1,0 +1,41 @@
+name: iosApp
+options:
+  bundleIdPrefix: page.stephens
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: iosApp
+        excludes:
+          - "Info.plist"
+    settings:
+      base:
+        INFOPLIST_FILE: iosApp/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: page.stephens.dailydozen
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        # Kotlin/Native framework produced by :composeApp embed-and-sign task
+        FRAMEWORK_SEARCH_PATHS:
+          - "$(inherited)"
+          - "$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "-framework"
+          - "ComposeApp"
+          # ComposeApp is a *static* framework; the SQLDelight NativeSqliteDriver
+          # needs the system SQLite, which the app must link itself.
+          - "-lsqlite3"
+        # The Gradle run-script needs to call gradlew/write build outputs.
+        ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+    preBuildScripts:
+      - name: "Compile Kotlin/Native framework (:composeApp)"
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          cd "$SRCROOT/.."
+          export JAVA_HOME=/Users/admin/.jdks/jdk-21.0.11+10/Contents/Home
+          export ANDROID_HOME=/Users/admin/Library/Android/sdk
+          ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode

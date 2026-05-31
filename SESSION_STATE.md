@@ -47,9 +47,14 @@ with a wasmJs web-worker driver; built w/ Kotlin 2.0.20, klib-compatible) ·
 - Test harness was throwaway in `/tmp/ddtest` (removed to reclaim root disk).
 
 ## NEXT STEPS / open work
-- **iOS**: code is in place (NativeSqliteDriver, PlatformModule.ios) but is
-  **Mac-only to build**; `iosApp/iOSApp.swift` still needs to call an iOS
-  `initKoin()` at launch. Not verifiable on this Linux box.
+- **iOS**: ✅ **builds and runs in the iOS Simulator** (verified on macOS + Xcode
+  26.5, 2026-05-29). Koin starts at launch via `iosMain/di/KoinInitializer.kt`
+  (`doInitKoin()`) called from `iOSApp.init()`. The `iosApp.xcodeproj` is generated
+  from `iosApp/project.yml` (XcodeGen) — still not committed by convention.
+  Build needs: `ARCHS=arm64`, `-lsqlite3` in OTHER_LDFLAGS (static framework +
+  SQLDelight native driver), and `CADisableMinimumFrameDurationOnPhone=true` in
+  Info.plist (Compose MP launch sanity check). App renders the 12-category
+  checklist; DB read path exercised at launch. See CLAUDE.md for the full recipe.
 - **Wasm persistence caveat**: the @cashapp sql.js worker keeps the DB **in-memory
   for the session** — it does NOT survive a full page reload (no IndexedDB
   persistence layer). Android/iOS persist to disk. Document this / add IndexedDB

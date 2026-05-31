@@ -5,6 +5,12 @@ import ComposeApp
 // bridge; contains no business or UI logic of its own.
 @main
 struct iOSApp: App {
+    // Start Koin once at launch, before any shared ViewModel is resolved —
+    // the iOS counterpart to Android's DailyDozenApp and Wasm's main().
+    init() {
+        KoinInitializerKt.doInitKoin()
+    }
+
     var body: some Scene {
         WindowGroup {
             ComposeView()
