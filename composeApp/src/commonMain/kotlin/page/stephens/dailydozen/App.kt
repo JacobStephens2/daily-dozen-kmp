@@ -2,7 +2,7 @@ package page.stephens.dailydozen
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import page.stephens.dailydozen.ui.checklist.ChecklistScreen
+import page.stephens.dailydozen.ui.MainScreen
 import page.stephens.dailydozen.ui.theme.DailyDozenTheme
 
 /**
@@ -13,6 +13,6 @@ import page.stephens.dailydozen.ui.theme.DailyDozenTheme
 @Preview
 fun App() {
     DailyDozenTheme {
-        ChecklistScreen()
+        MainScreen()
     }
 }
