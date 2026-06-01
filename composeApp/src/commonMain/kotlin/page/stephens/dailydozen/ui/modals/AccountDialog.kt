@@ -2,6 +2,7 @@ package page.stephens.dailydozen.ui.modals
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
@@ -39,12 +42,16 @@ fun AccountDialog(
     onDismiss: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+    val clipboard = LocalClipboardManager.current
     var mode by remember { mutableStateOf(AuthMode.SignIn) }
     var emailField by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
+
+    fun clipboardText(): String? = clipboard.getText()?.text?.trim()?.takeIf { it.isNotEmpty() }
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(shape = MaterialTheme.shapes.extraLarge, color = DozenPalette.surface) {
@@ -91,6 +98,9 @@ fun AccountDialog(
                         label = { Text("Email") },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        trailingIcon = {
+                            TextButton(onClick = { clipboardText()?.let { emailField = it } }) { Text("Paste") }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                     )
                     if (mode != AuthMode.Forgot) {
@@ -99,8 +109,16 @@ fun AccountDialog(
                             onValueChange = { password = it },
                             label = { Text("Password (8+ characters)") },
                             singleLine = true,
-                            visualTransformation = PasswordVisualTransformation(),
+                            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            trailingIcon = {
+                                Row {
+                                    TextButton(onClick = { clipboardText()?.let { password = it } }) { Text("Paste") }
+                                    TextButton(onClick = { showPassword = !showPassword }) {
+                                        Text(if (showPassword) "Hide" else "Show")
+                                    }
+                                }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
