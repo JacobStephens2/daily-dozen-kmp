@@ -16,7 +16,7 @@ targets:
       base:
         INFOPLIST_FILE: iosApp/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: page.stephens.dailydozen
-        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         # Kotlin/Native framework produced by :composeApp embed-and-sign task
         FRAMEWORK_SEARCH_PATHS:
           - "$(inherited)"
