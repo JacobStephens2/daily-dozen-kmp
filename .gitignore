@@ -16,6 +16,11 @@ local.properties
 *.apk
 *.aab
 
+# Signing secrets — never commit the keystore or its passwords
+*.keystore
+*.jks
+keystore.properties
+
 # Xcode / iOS
 iosApp/iosApp.xcodeproj/xcuserdata/
 iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
