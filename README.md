@@ -8,6 +8,24 @@ iOS, and the web (Wasm).
 > Multiplatform; Cascade shares only logic via a Rust core with native shells —
 > two multiplatform architectures chosen to fit each app's needs.
 
+## Download
+
+Signed Android APKs are published on the
+[Releases page](https://github.com/JacobStephens2/daily-dozen-kmp/releases).
+
+Each release is **built and signed entirely in CI** from the tagged commit
+([`.github/workflows/release.yml`](.github/workflows/release.yml)) and ships
+with a `.sha256` checksum, so the published artifact can be verified against
+the source it was built from:
+
+```bash
+sha256sum -c daily-dozen-<version>.apk.sha256
+```
+
+> Early preview (`v0.1.x`): a working local-first tracker on Android and web.
+> Account sync against the existing Daily Dozen backend (see `SYNC_CONTRACT.md`)
+> and the iOS build are still in progress.
+
 ## Architecture
 
 One shared `composeApp` module holds 90%+ of the code; three thin launchers
@@ -25,8 +43,8 @@ composeApp/src/
       checklist/ChecklistScreen.kt, ChecklistViewModel.kt
       components/DozenRow.kt, ServingStepper.kt
       theme/Theme.kt
-    data/                       # (SQLDelight repository — next milestone)
-    di/                         # (Koin wiring — next milestone)
+    data/                       # SQLDelight repository (reactive Flows)
+    di/                         # Koin wiring
   androidMain/                  # Android-only actuals
   iosMain/MainViewController.kt # iOS framework entry
   wasmJsMain/main.kt            # web (Wasm) entry → ComposeViewport { App() }
@@ -42,8 +60,8 @@ iosApp/                         # thin SwiftUI launcher (hosts App via UIViewCon
 | UI        | Compose Multiplatform 1.7.3 (Material 3) |
 | Language  | Kotlin 2.0.21 |
 | State     | `lifecycle-viewmodel-compose` (multiplatform) |
-| Persistence | SQLDelight 2.0.2 *(next milestone — mature Wasm support)* |
-| DI        | Koin 4.0 *(next milestone)* |
+| Persistence | SQLDelight 2.1.0 (first release with a wasmJs web-worker driver) |
+| DI        | Koin 4.0 |
 | Dates     | kotlinx-datetime |
 | Build     | Gradle 8.14.3, AGP 8.7.3 |
 
@@ -52,27 +70,52 @@ SQLDelight driver and a date helper.
 
 ## Building
 
-This repo was scaffolded on a Linux box. The Gradle home is kept on a data
-volume to spare the root disk:
+JDK 21 and the Android SDK are required. The committed Gradle config is
+host-portable (it's what CI uses); point `ANDROID_HOME` at your SDK and build:
 
 ```bash
-export GRADLE_USER_HOME=/mnt/volume_nyc3_01/jacob/.gradle
-export ANDROID_HOME=/home/jacob/Android/Sdk
+export ANDROID_HOME=$HOME/Android/Sdk
 
-# Android (verified build target on Linux)
+# Android
 ./gradlew :androidApp:assembleDebug
 
 # Web / Wasm
 ./gradlew :composeApp:wasmJsBrowserDistribution
 ```
 
-- **Android** and **Wasm** build on this Linux box.
+- **Android** and **Wasm** build on Linux; both are exercised on every push by
+  [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 - **iOS** can only be built on macOS with Xcode — see `iosApp/README.md`.
+
+### Signed release builds
+
+The release build is signed when a keystore is supplied — via environment
+variables (how CI passes its secrets) or a gitignored `keystore.properties` at
+the repo root for local builds:
+
+```properties
+storeFile=release.keystore
+storePassword=…
+keyAlias=…
+keyPassword=…
+```
+
+```bash
+./gradlew :androidApp:assembleRelease
+```
+
+With no keystore present the release build still succeeds, just unsigned — so a
+fresh clone builds with no secrets. Tagging a commit `vX.Y.Z` and pushing the
+tag triggers [`release.yml`](.github/workflows/release.yml), which builds the
+signed APK in CI and attaches it (plus a checksum) to a GitHub Release.
 
 ## Status
 
-**Milestone 1 — compiling skeleton:** all three targets declared, three
-launchers in place, `App.kt → ChecklistScreen.kt` renders the 12 categories
-with tappable serving steppers from an in-memory catalog.
+A working **local-first tracker** on Android and web (Wasm): the 12 categories
+render with tappable serving steppers, and daily state persists through
+SQLDelight (reactive `Flow`s, Koin-injected) — verified end-to-end on Android
+and in headless Chrome for Wasm.
 
-Next: SQLDelight persistence (daily state + read-only history), then Koin DI.
+In progress: account **sync** against the existing Daily Dozen backend (spec in
+[`SYNC_CONTRACT.md`](SYNC_CONTRACT.md)), a history UI, and the **iOS** launcher
+(Mac-only build).
