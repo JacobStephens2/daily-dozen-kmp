@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import page.stephens.dailydozen.data.DayProgressInput
 import page.stephens.dailydozen.data.DozenRepository
+import page.stephens.dailydozen.data.sync.SyncEngine
 import page.stephens.dailydozen.domain.DietPresets
 import page.stephens.dailydozen.domain.DozenCatalog
 import page.stephens.dailydozen.domain.model.CategoryProgress
@@ -22,6 +23,7 @@ import page.stephens.dailydozen.domain.todayKey
  */
 class ChecklistViewModel(
     private val repository: DozenRepository,
+    private val syncEngine: SyncEngine,
 ) : ViewModel() {
 
     private val today: String = todayKey()
@@ -41,7 +43,11 @@ class ChecklistViewModel(
         val current = state.value.progress
             .firstOrNull { it.category.id == categoryId }?.count ?: 0
         val next = (current + delta).coerceAtLeast(0)
-        viewModelScope.launch { repository.setCount(today, categoryId, next) }
+        viewModelScope.launch {
+            repository.setCount(today, categoryId, next)
+            // Debounced push (§7); a no-op when signed out (no token).
+            syncEngine.requestSync()
+        }
     }
 
     private fun buildState(input: DayProgressInput): ChecklistUiState {
