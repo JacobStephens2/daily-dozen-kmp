@@ -9,6 +9,7 @@ import page.stephens.dailydozen.data.DozenRepository
 import page.stephens.dailydozen.data.remote.SyncApi
 import page.stephens.dailydozen.data.remote.createSyncHttpClient
 import page.stephens.dailydozen.data.sync.SyncEngine
+import page.stephens.dailydozen.ui.account.AccountViewModel
 import page.stephens.dailydozen.ui.checklist.ChecklistViewModel
 
 /** Cross-platform wiring: the repository, the sync stack, and the ViewModels. */
@@ -18,6 +19,7 @@ val appModule: Module = module {
     single { SyncApi(get(), get()) } // HttpClient, TokenStore
     single { SyncEngine(get(), get(), get()) } // SyncApi, DozenRepository, TokenStore
     viewModelOf(::ChecklistViewModel)
+    viewModelOf(::AccountViewModel)
 }
 
 /**
