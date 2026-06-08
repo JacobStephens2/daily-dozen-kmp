@@ -3,23 +3,28 @@ package page.stephens.dailydozen.domain
 import page.stephens.dailydozen.domain.model.DozenCategory
 
 /**
- * The canonical 12 Daily Dozen categories with their recommended serving
- * targets, per Dr. Greger's "How Not to Die". This is the in-memory source
- * the first-milestone skeleton renders; persistence is layered on later.
+ * The master list of 13 Daily Dozen categories, verbatim from SYNC_CONTRACT.md
+ * §4 — exact hyphenated ids (incl. `protein`), in contract order. These ids are
+ * the sync key: any underscore or omission silently diverges KMP from the web
+ * backend. Which of these are *active*, and each one's daily target, depends on
+ * the active diet preset (§5) — see [DietPresets].
  */
 object DozenCatalog {
     val categories: List<DozenCategory> = listOf(
-        DozenCategory("beans", "Beans", target = 3, emoji = "🫘"),
-        DozenCategory("berries", "Berries", target = 1, emoji = "🫐"),
-        DozenCategory("other_fruits", "Other Fruits", target = 3, emoji = "🍎"),
-        DozenCategory("cruciferous", "Cruciferous Vegetables", target = 1, emoji = "🥦"),
-        DozenCategory("greens", "Greens", target = 2, emoji = "🥬"),
-        DozenCategory("other_veg", "Other Vegetables", target = 2, emoji = "🥕"),
-        DozenCategory("flaxseeds", "Flaxseeds", target = 1, emoji = "🌾"),
-        DozenCategory("nuts_seeds", "Nuts & Seeds", target = 1, emoji = "🥜"),
-        DozenCategory("herbs_spices", "Herbs & Spices", target = 1, emoji = "🌶️"),
-        DozenCategory("whole_grains", "Whole Grains", target = 3, emoji = "🌾"),
-        DozenCategory("beverages", "Beverages", target = 5, emoji = "💧"),
-        DozenCategory("exercise", "Exercise", target = 1, emoji = "🏃"),
+        DozenCategory("beans", "Beans", emoji = "🫘"),
+        DozenCategory("protein", "Protein", emoji = "🥩"),
+        DozenCategory("berries", "Berries", emoji = "🫐"),
+        DozenCategory("other-fruits", "Other Fruits", emoji = "🍎"),
+        DozenCategory("greens", "Greens", emoji = "🥬"),
+        DozenCategory("cruciferous", "Cruciferous Vegetables", emoji = "🥦"),
+        DozenCategory("other-vegetables", "Other Vegetables", emoji = "🥕"),
+        DozenCategory("flaxseed", "Flaxseed", emoji = "🌾"),
+        DozenCategory("nuts-seeds", "Nuts and Seeds", emoji = "🥜"),
+        DozenCategory("herbs-spices", "Herbs and Spices", emoji = "🌿"),
+        DozenCategory("whole-grains", "Whole Grains", emoji = "🌾"),
+        DozenCategory("beverages", "Beverages", emoji = "💧"),
+        DozenCategory("exercise", "Exercise", emoji = "🏃"),
     )
+
+    val byId: Map<String, DozenCategory> = categories.associateBy { it.id }
 }
