@@ -85,6 +85,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.security.crypto)
             implementation(libs.sqldelight.android.driver)
             implementation(libs.koin.android)
         }
