@@ -71,6 +71,12 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
 
+            // Networking (sync)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.auth)
+
             // Persistence + DI
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
@@ -88,11 +94,14 @@ kotlin {
             implementation(libs.androidx.security.crypto)
             implementation(libs.sqldelight.android.driver)
             implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
             implementation(libs.sqldelight.native.driver)
+            implementation(libs.ktor.client.darwin)
         }
         wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
             implementation(libs.sqldelight.web.worker.driver)
             // sql.js engine + SQLDelight's worker that drives it; copy-webpack-plugin
             // ships sql.js's wasm blob to the dist root (see webpack.config.d/).

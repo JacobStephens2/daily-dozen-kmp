@@ -6,11 +6,15 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import page.stephens.dailydozen.data.DozenRepository
+import page.stephens.dailydozen.data.remote.SyncApi
+import page.stephens.dailydozen.data.remote.createSyncHttpClient
 import page.stephens.dailydozen.ui.checklist.ChecklistViewModel
 
-/** Cross-platform wiring: the repository and the ViewModels. */
+/** Cross-platform wiring: the repository, the sync client, and the ViewModels. */
 val appModule: Module = module {
     single { DozenRepository(get()) }
+    single { createSyncHttpClient(get()) } // TokenStore from platformModule
+    single { SyncApi(get(), get()) } // HttpClient, TokenStore
     viewModelOf(::ChecklistViewModel)
 }
 
