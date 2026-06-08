@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import page.stephens.dailydozen.data.DayProgressInput
 import page.stephens.dailydozen.data.DozenRepository
 import page.stephens.dailydozen.domain.DietPresets
 import page.stephens.dailydozen.domain.DozenCatalog
@@ -15,26 +16,22 @@ import page.stephens.dailydozen.domain.todayKey
 
 /**
  * Exposes today's checklist as reactive state backed by [DozenRepository].
- * Serving counts persist across launches; the UI never touches the database
- * directly.
+ * Active categories and per-category targets derive from the active profile's
+ * diet preset (§5), so switching diet on the web reflects here after a sync.
+ * Serving counts persist across launches; the UI never touches the DB directly.
  */
 class ChecklistViewModel(
     private val repository: DozenRepository,
 ) : ViewModel() {
 
-    // Interim until M1 wires the active profile's dietType: render the Standard
-    // preset. Active categories = preset entries with target > 0 (§5).
-    private val targets: Map<String, Int> = DietPresets.targetsFor("standard", null)
-    private val activeCategories = DozenCatalog.categories.filter { (targets[it.id] ?: 0) > 0 }
-
     private val today: String = todayKey()
 
-    val state: StateFlow<ChecklistUiState> = repository.countsForDay(today)
+    val state: StateFlow<ChecklistUiState> = repository.dayFlow(today)
         .map(::buildState)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = buildState(emptyMap()),
+            initialValue = buildState(DayProgressInput("standard", null, emptyMap())),
         )
 
     fun increment(categoryId: String) = adjust(categoryId, +1)
@@ -47,9 +44,11 @@ class ChecklistViewModel(
         viewModelScope.launch { repository.setCount(today, categoryId, next) }
     }
 
-    private fun buildState(counts: Map<String, Int>): ChecklistUiState {
-        val progress = activeCategories.map { category ->
-            CategoryProgress(category, targets[category.id] ?: 0, counts[category.id] ?: 0)
+    private fun buildState(input: DayProgressInput): ChecklistUiState {
+        val targets = DietPresets.targetsFor(input.dietType, input.customServings)
+        val active = DozenCatalog.categories.filter { (targets[it.id] ?: 0) > 0 }
+        val progress = active.map { category ->
+            CategoryProgress(category, targets[category.id] ?: 0, input.counts[category.id] ?: 0)
         }
         return ChecklistUiState(
             progress = progress,
