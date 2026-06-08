@@ -1,6 +1,6 @@
--- One row per (day, category): how many servings were logged that day.
--- `day` is an ISO-8601 local date (yyyy-MM-dd). History is just every row
--- with a day < today, so no separate history table is needed.
+-- Legacy count-based table (pre-sync). RETAINED read-only so the one-time
+-- migration to the contract blob is non-destructive (ADR-4): the user's original
+-- rows are never dropped until a verified first sync. New code does not write here.
 CREATE TABLE servingLog (
     day        TEXT NOT NULL,
     categoryId TEXT NOT NULL,
@@ -8,21 +8,22 @@ CREATE TABLE servingLog (
     PRIMARY KEY (day, categoryId)
 );
 
--- Today's checklist: the logged count for each category on a given day.
-selectForDay:
-SELECT categoryId, count
-FROM servingLog
-WHERE day = ?;
+selectAllLegacy:
+SELECT day, categoryId, count FROM servingLog;
 
--- Read-only history: every logged cell, newest day first.
-selectHistory:
-SELECT day, categoryId, count
-FROM servingLog
-ORDER BY day DESC, categoryId ASC;
+-- Singleton row (id = 0) holding the whole synced blob as JSON plus sync
+-- bookkeeping. A single opaque text column mirrors the server's opaque blob,
+-- which guarantees a lossless round-trip including unknown fields (ADR-4 / §8).
+CREATE TABLE syncState (
+    id              INTEGER NOT NULL PRIMARY KEY,
+    blobJson        TEXT NOT NULL,
+    syncedUpdatedAt TEXT,
+    dirty           INTEGER NOT NULL DEFAULT 0
+);
 
--- Set the absolute count for a cell. INSERT OR REPLACE (rather than an UPSERT
--- with ON CONFLICT DO UPDATE) keeps us on the baseline SQLite dialect, which
--- matters because minSdk 26 devices ship SQLite older than UPSERT's 3.24.
-upsert:
-INSERT OR REPLACE INTO servingLog(day, categoryId, count)
-VALUES (?, ?, ?);
+selectState:
+SELECT blobJson, syncedUpdatedAt, dirty FROM syncState WHERE id = 0;
+
+upsertState:
+INSERT OR REPLACE INTO syncState(id, blobJson, syncedUpdatedAt, dirty)
+VALUES (0, ?, ?, ?);
