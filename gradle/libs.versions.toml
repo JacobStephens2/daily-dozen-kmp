@@ -5,6 +5,7 @@ kotlin = "2.0.21"
 agp = "8.7.3"
 compose-multiplatform = "1.7.3"
 androidx-activityCompose = "1.9.3"
+androidx-securityCrypto = "1.1.0-alpha06"
 lifecycle = "2.8.4"           # org.jetbrains.androidx.lifecycle (KMP build of AndroidX Lifecycle)
 kotlinx-datetime = "0.6.1"
 kotlinx-coroutines = "1.9.0"
@@ -52,6 +53,7 @@ sqldelight-web-worker-driver = { module = "app.cash.sqldelight:web-worker-driver
 
 # Android launcher
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-securityCrypto" }
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
