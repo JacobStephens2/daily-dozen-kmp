@@ -34,6 +34,27 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
+      - name: Token-safety guard (ADR-2)
+        run: |
+          set -euo pipefail
+          # The JWT may be cleared ONLY from explicit logout — never from a 401 /
+          # sync path — or we reintroduce the Chart35 silent-logout data loss.
+          bad_clear=$(grep -rln "tokenStore.clear" composeApp/src --include=*.kt \
+            | grep -v "ui/account/AccountViewModel.kt" || true)
+          if [ -n "$bad_clear" ]; then
+            echo "::error::TokenStore.clear() called outside logout: $bad_clear"; exit 1
+          fi
+          # No token should ever be written to a log.
+          token_logs=$(grep -rniE "(println|Log\.[dewiv]|console\.log)\b[^;]*token" \
+            composeApp/src --include=*.kt || true)
+          if [ -n "$token_logs" ]; then
+            echo "::error::possible token logging:"; echo "$token_logs"; exit 1
+          fi
+          echo "Token-safety guard passed."
+
+      - name: Run common tests (merge laws, date vectors, serialization, migration)
+        run: ./gradlew :composeApp:testDebugUnitTest --no-daemon --stacktrace
+
       - name: Assemble Android (debug)
         run: ./gradlew :androidApp:assembleDebug --no-daemon --stacktrace
 
