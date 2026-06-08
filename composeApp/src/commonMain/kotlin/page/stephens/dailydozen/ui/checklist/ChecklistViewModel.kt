@@ -7,12 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
 import page.stephens.dailydozen.data.DozenRepository
+import page.stephens.dailydozen.domain.DietPresets
 import page.stephens.dailydozen.domain.DozenCatalog
 import page.stephens.dailydozen.domain.model.CategoryProgress
+import page.stephens.dailydozen.domain.todayKey
 
 /**
  * Exposes today's checklist as reactive state backed by [DozenRepository].
@@ -23,8 +22,12 @@ class ChecklistViewModel(
     private val repository: DozenRepository,
 ) : ViewModel() {
 
-    private val today: String =
-        Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
+    // Interim until M1 wires the active profile's dietType: render the Standard
+    // preset. Active categories = preset entries with target > 0 (§5).
+    private val targets: Map<String, Int> = DietPresets.targetsFor("standard", null)
+    private val activeCategories = DozenCatalog.categories.filter { (targets[it.id] ?: 0) > 0 }
+
+    private val today: String = todayKey()
 
     val state: StateFlow<ChecklistUiState> = repository.countsForDay(today)
         .map(::buildState)
@@ -45,8 +48,8 @@ class ChecklistViewModel(
     }
 
     private fun buildState(counts: Map<String, Int>): ChecklistUiState {
-        val progress = DozenCatalog.categories.map { category ->
-            CategoryProgress(category, counts[category.id] ?: 0)
+        val progress = activeCategories.map { category ->
+            CategoryProgress(category, targets[category.id] ?: 0, counts[category.id] ?: 0)
         }
         return ChecklistUiState(
             progress = progress,

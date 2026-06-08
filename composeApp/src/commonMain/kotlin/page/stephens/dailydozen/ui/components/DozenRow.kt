@@ -59,7 +59,7 @@ fun DozenRow(
             }
             ServingStepper(
                 count = progress.count,
-                target = progress.category.target,
+                target = progress.target,
                 onIncrement = onIncrement,
                 onDecrement = onDecrement,
             )
