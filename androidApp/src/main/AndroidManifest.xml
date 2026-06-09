@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Required for account sign-in / sync (the Ktor/OkHttp client). Without it,
+         OkHttp's DNS lookup throws SecurityException on its dispatcher thread,
+         which crashes the process (it bypasses the suspend call's try/catch). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="page.stephens.dailydozen.DailyDozenApp"
         android:allowBackup="true"
