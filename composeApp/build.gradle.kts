@@ -112,6 +112,11 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "page.stephens.dailydozen.resources"
+}
+
 sqldelight {
     databases {
         create("DailyDozenDb") {

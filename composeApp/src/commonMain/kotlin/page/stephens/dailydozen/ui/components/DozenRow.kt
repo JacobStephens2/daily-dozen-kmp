@@ -40,9 +40,12 @@ fun DozenRow(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Emoji glyphs: on Android the OS supplies them; on Skia targets
+            // (iOS/web) we supply a bundled color font (see emojiFontFamily()).
             Text(
                 text = progress.category.emoji,
                 style = MaterialTheme.typography.headlineSmall,
+                fontFamily = emojiFontFamily(),
                 modifier = Modifier.padding(end = 12.dp),
             )
             Column(modifier = Modifier.weight(1f)) {
