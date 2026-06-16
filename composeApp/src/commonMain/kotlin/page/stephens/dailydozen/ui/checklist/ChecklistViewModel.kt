@@ -36,15 +36,10 @@ class ChecklistViewModel(
             initialValue = buildState(DayProgressInput("standard", null, emptyMap())),
         )
 
-    fun increment(categoryId: String) = adjust(categoryId, +1)
-    fun decrement(categoryId: String) = adjust(categoryId, -1)
-
-    private fun adjust(categoryId: String, delta: Int) {
-        val current = state.value.progress
-            .firstOrNull { it.category.id == categoryId }?.count ?: 0
-        val next = (current + delta).coerceAtLeast(0)
+    /** Set the absolute serving count for a category (from the serving chips). */
+    fun setCount(categoryId: String, count: Int) {
         viewModelScope.launch {
-            repository.setCount(today, categoryId, next)
+            repository.setCount(today, categoryId, count.coerceAtLeast(0))
             // Debounced push (§7); a no-op when signed out (no token).
             syncEngine.requestSync()
         }

@@ -1,71 +1,80 @@
 package page.stephens.dailydozen.ui.components
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import page.stephens.dailydozen.domain.model.CategoryProgress
+import page.stephens.dailydozen.ui.theme.Harvest
 
 /**
- * A single Daily Dozen category row: emoji + name on the left, a serving
- * stepper on the right. The card tints green once the target is met.
+ * A category card matching the web app: a circular emoji "halo", a linked
+ * category name, a serving-size description, and a row of numbered serving chips
+ * below. White card body lifted softly off the cream background — no borders.
  */
 @Composable
 fun DozenRow(
     progress: CategoryProgress,
-    onIncrement: () -> Unit,
-    onDecrement: () -> Unit,
+    onSetCount: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val container by animateColorAsState(
-        if (progress.isComplete) MaterialTheme.colorScheme.primaryContainer
-        else MaterialTheme.colorScheme.surfaceVariant,
-    )
-    Card(
+    Surface(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = container),
+        shape = RoundedCornerShape(16.dp),
+        color = Harvest.CardWhite,
+        shadowElevation = 2.dp,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // Emoji glyphs: on Android the OS supplies them; on Skia targets
-            // (iOS/web) we supply a bundled color font (see emojiFontFamily()).
-            Text(
-                text = progress.category.emoji,
-                style = MaterialTheme.typography.headlineSmall,
-                fontFamily = emojiFontFamily(),
-                modifier = Modifier.padding(end = 12.dp),
-            )
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = progress.category.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = if (progress.isComplete) "Complete" else "${progress.remaining} to go",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier.size(48.dp).clip(CircleShape).background(Harvest.PrimaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = progress.category.emoji,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontFamily = emojiFontFamily(),
+                    )
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = progress.category.name,
+                        color = Harvest.Link,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline,
+                    )
+                    if (progress.category.description.isNotEmpty()) {
+                        Text(
+                            text = progress.category.description,
+                            color = Harvest.OnSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
+                }
             }
-            ServingStepper(
-                count = progress.count,
-                target = progress.target,
-                onIncrement = onIncrement,
-                onDecrement = onDecrement,
-            )
+            Spacer(Modifier.height(14.dp))
+            ServingChips(count = progress.count, target = progress.target, onSetCount = onSetCount)
         }
     }
 }

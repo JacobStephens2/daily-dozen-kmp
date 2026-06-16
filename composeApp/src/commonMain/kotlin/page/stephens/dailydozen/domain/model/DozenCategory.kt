@@ -13,4 +13,6 @@ data class DozenCategory(
     val id: String,
     val name: String,
     val emoji: String,
+    /** Serving-size hint shown under the name (UI-only, matches the web app). */
+    val description: String = "",
 )
