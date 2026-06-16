@@ -1,10 +1,20 @@
 package page.stephens.dailydozen.ui.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import org.jetbrains.compose.resources.Font
+import page.stephens.dailydozen.resources.Res
+import page.stephens.dailydozen.resources.epilogue_bold
+import page.stephens.dailydozen.resources.epilogue_regular
+import page.stephens.dailydozen.resources.inter_bold
+import page.stephens.dailydozen.resources.inter_regular
+import page.stephens.dailydozen.resources.inter_semibold
 
 /**
  * The "Harvest Hearth / Modern Apothecary" palette, matching the web app's
@@ -59,8 +69,41 @@ private val HarvestColors = lightColorScheme(
 fun DailyDozenTheme(
     content: @Composable () -> Unit,
 ) {
+    // The web app's type pairing: Epilogue for display/headlines (editorial
+    // character), Inter for everything else (high-density legibility).
+    val epilogue = FontFamily(
+        Font(Res.font.epilogue_regular),
+        Font(Res.font.epilogue_bold, FontWeight.Bold),
+    )
+    val inter = FontFamily(
+        Font(Res.font.inter_regular),
+        Font(Res.font.inter_semibold, FontWeight.SemiBold),
+        Font(Res.font.inter_bold, FontWeight.Bold),
+    )
     MaterialTheme(
         colorScheme = HarvestColors,
+        typography = harvestTypography(display = epilogue, body = inter),
         content = content,
+    )
+}
+
+private fun harvestTypography(display: FontFamily, body: FontFamily): Typography {
+    val d = Typography()
+    return Typography(
+        displayLarge = d.displayLarge.copy(fontFamily = display),
+        displayMedium = d.displayMedium.copy(fontFamily = display),
+        displaySmall = d.displaySmall.copy(fontFamily = display),
+        headlineLarge = d.headlineLarge.copy(fontFamily = display),
+        headlineMedium = d.headlineMedium.copy(fontFamily = display),
+        headlineSmall = d.headlineSmall.copy(fontFamily = display),
+        titleLarge = d.titleLarge.copy(fontFamily = body),
+        titleMedium = d.titleMedium.copy(fontFamily = body),
+        titleSmall = d.titleSmall.copy(fontFamily = body),
+        bodyLarge = d.bodyLarge.copy(fontFamily = body),
+        bodyMedium = d.bodyMedium.copy(fontFamily = body),
+        bodySmall = d.bodySmall.copy(fontFamily = body),
+        labelLarge = d.labelLarge.copy(fontFamily = body),
+        labelMedium = d.labelMedium.copy(fontFamily = body),
+        labelSmall = d.labelSmall.copy(fontFamily = body),
     )
 }
