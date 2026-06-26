@@ -30,13 +30,13 @@ fun ServingChips(
     onSetCount: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         for (i in 1..target) {
             val filled = i <= count
             Box(
                 modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
                     .background(if (filled) Harvest.Secondary else Harvest.SurfaceContainerHigh)
                     .clickable { onSetCount(if (i == count) i - 1 else i) },
                 contentAlignment = Alignment.Center,
