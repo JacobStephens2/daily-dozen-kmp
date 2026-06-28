@@ -68,6 +68,7 @@ verbatim and `GET /api/data` returns it as `{ "data": <PAYLOAD>, "updatedAt": "�
     "user": {                     // profile id (string key). Defaults: "user", "other"
       "name": "You",              // display name (default "You" / "Other")
       "color": "#38672a",         // hex; defaults "#38672a" (user), "#7c5724" (other)
+      "emoji": "🧑",               // per-profile icon (web app, 2026-06); defaults "🧑" (user), "👥" (other). KMP preserves it via unknownFields.
       "dietType": "standard",     // preset id, see §5; default "standard"
       "customServings": {         // map<categoryId,int>; MAY BE null (then derive from dietType preset)
         "beans": 3, "protein": 0, "berries": 1, "other-fruits": 3, "greens": 2,
