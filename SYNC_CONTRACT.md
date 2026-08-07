@@ -1,7 +1,7 @@
 # Sync contract — Bountywell (KMP ⇄ web backend)
 
 **Status:** authoritative. Derived from the live web app + backend source on the
-server (`/var/www/dailydozen.stephens.page`: `api.js`, `db.js`, `js/auth.js`,
+server (`/var/www/bountywell.com`: `api.js`, `db.js`, `js/auth.js`,
 `js/storage.js`, `js/categories.js`) on 2026-05-31, not from paraphrase.
 
 The KMP apps (iOS/Android/Wasm) sync with the **same** account + data store as the

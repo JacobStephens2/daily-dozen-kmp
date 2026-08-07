@@ -5,7 +5,7 @@ _Last updated 2026-05-29 (after the RAM-upgrade reboot + SQLDelight/Koin work)._
 ## What this is
 Fresh **Compose Multiplatform** rebuild of Bountywell (shares logic AND UI
 across Android / iOS / web-Wasm). Separate from the old vanilla-JS PWA at
-`/var/www/dailydozen.stephens.page`. Portfolio contrast piece vs. Cascade.
+`/var/www/bountywell.com`. Portfolio contrast piece vs. Cascade.
 
 ## Where everything lives
 - **Project root:** `/home/jacob/bountywell-kmp` (renamed from `dailydozen-kmp` on 2026-08-07)
