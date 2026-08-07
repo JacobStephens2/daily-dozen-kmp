@@ -57,8 +57,8 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           apk=$(find androidApp/build/outputs/apk/release -name '*.apk' | head -1)
           mkdir -p dist
-          cp "$apk" "dist/daily-dozen-${version}.apk"
-          ( cd dist && sha256sum "daily-dozen-${version}.apk" > "daily-dozen-${version}.apk.sha256" )
+          cp "$apk" "dist/bountywell-${version}.apk"
+          ( cd dist && sha256sum "bountywell-${version}.apk" > "bountywell-${version}.apk.sha256" )
           echo "Staged:"; ls -la dist
 
       - name: Publish GitHub Release

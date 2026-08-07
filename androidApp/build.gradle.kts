@@ -20,11 +20,11 @@ fun signingValue(envKey: String, propKey: String): String? =
     System.getenv(envKey) ?: keystoreProperties.getProperty(propKey)
 
 android {
-    namespace = "page.stephens.dailydozen.android"
+    namespace = "page.stephens.bountywell.android"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "page.stephens.dailydozen"
+        applicationId = "page.stephens.bountywell"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 8

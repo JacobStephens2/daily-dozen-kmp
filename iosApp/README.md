@@ -1,6 +1,6 @@
 # iOS launcher
 
-This folder holds the thin SwiftUI launcher for Daily Dozen. It hosts the
+This folder holds the thin SwiftUI launcher for Bountywell. It hosts the
 shared Compose UI via `MainViewControllerKt.MainViewController()` (defined in
 `composeApp/src/iosMain`) — no business or UI logic lives here.
 

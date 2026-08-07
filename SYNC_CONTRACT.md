@@ -1,4 +1,4 @@
-# Sync contract — Daily Dozen (KMP ⇄ web backend)
+# Sync contract — Bountywell (KMP ⇄ web backend)
 
 **Status:** authoritative. Derived from the live web app + backend source on the
 server (`/var/www/dailydozen.stephens.page`: `api.js`, `db.js`, `js/auth.js`,
@@ -15,12 +15,12 @@ if the web app changes.
 
 ## 1. API base URL
 
-Use **`https://dailydozen.stephens.page/api`**.
+Use **`https://bountywell.com/api`**.
 
-- Both `dailydozen.stephens.page` and `dailydozen.jacobstephens.net` proxy
-  `/api/ → 127.0.0.1:3000` (same Node process, same SQLite DB), so accounts/data
-  are shared either way — but `stephens.page` is canonical: it's the backend's own
-  `APP_URL` (password-reset emails link there) and matches the rest of the infra.
+- `bountywell.com`, `dailydozen.stephens.page`, and `dailydozen.jacobstephens.net`
+  all proxy `/api/ → 127.0.0.1:3000` (same Node process, same SQLite DB), so
+  accounts/data are shared either way — but `bountywell.com` is canonical: it's the
+  backend's own `APP_URL` (sign-in emails link there) and matches the rest of the infra.
 - `jacobstephens.net` is a legacy alias. Older session notes calling it "the live
   URL" are stale (they reference `/var/www/daily_dozen/`, which no longer exists).
 - The web client uses a **relative** `/api`; native clients must use the absolute
@@ -135,7 +135,7 @@ for that diet). `getActiveCategories()` = entries with servings > 0.
 
 | preset id | label | beans | protein | berries | other-fruits | greens | cruciferous | other-vegetables | flaxseed | nuts-seeds | herbs-spices | whole-grains | beverages | exercise |
 |---|---|--|--|--|--|--|--|--|--|--|--|--|--|--|
-| `standard` | Standard Daily Dozen | 3 | 0 | 1 | 3 | 2 | 1 | 2 | 1 | 1 | 1 | 3 | 5 | 1 |
+| `standard` | Standard | 3 | 0 | 1 | 3 | 2 | 1 | 2 | 1 | 1 | 1 | 3 | 5 | 1 |
 | `modified` | Modified | 0 | 2 | 1 | 3 | 2 | 1 | 2 | 0 | 1 | 1 | 3 | 5 | 1 |
 | `one-bean` | One Bean | 1 | 1 | 1 | 3 | 2 | 1 | 2 | 0 | 1 | 1 | 3 | 5 | 1 |
 | `one-bean-two-protein` | One Bean + Two Protein | 1 | 2 | 1 | 3 | 2 | 1 | 2 | 0 | 1 | 1 | 3 | 5 | 1 |

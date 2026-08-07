@@ -1,10 +1,10 @@
-# Daily Dozen — Compose Multiplatform
+# Bountywell — Compose Multiplatform
 
-A local-first tracker for Dr. Greger's 12 Daily Dozen food categories, built as
-a **Compose Multiplatform** app that shares both logic *and* UI across Android,
+A local-first food and wellness checklist with customizable plans, built as a
+**Compose Multiplatform** app that shares both logic *and* UI across Android,
 iOS, and the web (Wasm).
 
-> Portfolio contrast: Daily Dozen shares logic **and** UI via Compose
+> Portfolio contrast: Bountywell shares logic **and** UI via Compose
 > Multiplatform; Cascade shares only logic via a Rust core with native shells —
 > two multiplatform architectures chosen to fit each app's needs.
 
@@ -19,11 +19,11 @@ with a `.sha256` checksum, so the published artifact can be verified against
 the source it was built from:
 
 ```bash
-sha256sum -c daily-dozen-<version>.apk.sha256
+sha256sum -c bountywell-<version>.apk.sha256
 ```
 
 > Early preview (`v0.1.x`): a working local-first tracker on Android and web.
-> Account sync against the existing Daily Dozen backend (see `SYNC_CONTRACT.md`)
+> Account sync against the existing Bountywell backend (see `SYNC_CONTRACT.md`)
 > and the iOS build are still in progress.
 
 ## Architecture
@@ -33,7 +33,7 @@ just boot the shared `App()` composable.
 
 ```
 composeApp/src/
-  commonMain/kotlin/page/stephens/dailydozen/
+  commonMain/kotlin/page/stephens/bountywell/
     App.kt                      # root composable the launchers call
     domain/                     # pure logic — no Compose, no platform deps
       model/DozenCategory.kt
@@ -116,6 +116,6 @@ render with tappable serving steppers, and daily state persists through
 SQLDelight (reactive `Flow`s, Koin-injected) — verified end-to-end on Android
 and in headless Chrome for Wasm.
 
-In progress: account **sync** against the existing Daily Dozen backend (spec in
+In progress: account **sync** against the existing Bountywell backend (spec in
 [`SYNC_CONTRACT.md`](SYNC_CONTRACT.md)), a history UI, and the **iOS** launcher
 (Mac-only build).

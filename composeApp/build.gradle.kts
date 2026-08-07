@@ -114,13 +114,13 @@ kotlin {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "page.stephens.dailydozen.resources"
+    packageOfResClass = "page.stephens.bountywell.resources"
 }
 
 sqldelight {
     databases {
-        create("DailyDozenDb") {
-            packageName.set("page.stephens.dailydozen.db")
+        create("BountywellDb") {
+            packageName.set("page.stephens.bountywell.db")
             // Async-generated API so the same schema/queries serve both the
             // synchronous native drivers (Android/iOS, via Schema.synchronous())
             // and the async web-worker driver (Wasm).
@@ -130,7 +130,7 @@ sqldelight {
 }
 
 android {
-    namespace = "page.stephens.dailydozen"
+    namespace = "page.stephens.bountywell"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

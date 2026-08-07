@@ -1,7 +1,7 @@
 # ADR-0001 — Offline-first sync without data loss against a last-writer-wins opaque-blob backend
 
 **Status:** Accepted · **Date:** 2026-06-08
-**Context:** Daily Dozen (Compose Multiplatform) added account sign-in and
+**Context:** Bountywell (Compose Multiplatform) added account sign-in and
 cross-device sync against the *same* backend as the existing web app — a backend
 the client does not control.
 

@@ -1,4 +1,4 @@
-rootProject.name = "daily-dozen"
+rootProject.name = "bountywell"
 
 pluginManagement {
     repositories {

@@ -1,14 +1,14 @@
-# Session state — Daily Dozen KMP
+# Session state — Bountywell KMP
 
 _Last updated 2026-05-29 (after the RAM-upgrade reboot + SQLDelight/Koin work)._
 
 ## What this is
-Fresh **Compose Multiplatform** rebuild of Daily Dozen (shares logic AND UI
+Fresh **Compose Multiplatform** rebuild of Bountywell (shares logic AND UI
 across Android / iOS / web-Wasm). Separate from the old vanilla-JS PWA at
 `/var/www/dailydozen.stephens.page`. Portfolio contrast piece vs. Cascade.
 
 ## Where everything lives
-- **Project root:** `/mnt/volume_nyc3_01/jacob/dailydozen-kmp` (100 GB data volume, NOT root disk)
+- **Project root:** `/home/jacob/bountywell-kmp` (renamed from `dailydozen-kmp` on 2026-08-07)
 - **Now a git repo** (`git init` done this session; 3 commits). `user.email` = jstephens@vagabondtours.com.
 - **Gradle home:** `export GRADLE_USER_HOME=/mnt/volume_nyc3_01/jacob/.gradle`
 - **Android SDK:** `export ANDROID_HOME=/home/jacob/Android/Sdk`
@@ -25,7 +25,7 @@ with a wasmJs web-worker driver; built w/ Kotlin 2.0.20, klib-compatible) ·
 2. **Verify Android** — `:androidApp:assembleDebug` BUILD SUCCESSFUL (10 MB APK).
 3. **Verify Wasm** — `:composeApp:wasmJsBrowserDistribution` BUILD SUCCESSFUL.
 4. **SQLDelight persistence + Koin DI** — done on all three targets:
-   - Schema `db/DailyDozen.sq`: `servingLog(day, categoryId, count)` PK(day,category),
+   - Schema `db/Bountywell.sq`: `servingLog(day, categoryId, count)` PK(day,category),
      `INSERT OR REPLACE` (baseline SQLite dialect, safe on minSdk 26).
    - `generateAsync=true` → one generated API drives both the synchronous native
      drivers (Android/iOS, adapted via `Schema.synchronous()` from async-extensions)
@@ -37,7 +37,7 @@ with a wasmJs web-worker driver; built w/ Kotlin 2.0.20, klib-compatible) ·
    - `ChecklistViewModel` reads/writes through the repo (today via kotlinx-datetime),
      state via `stateIn`. UI gets the VM via `koinViewModel()`.
    - Koin: shared `appModule` + `expect val platformModule`; `initKoin()` started
-     from `DailyDozenApp` (Android), `main()` (Wasm), and (TODO) iOS launcher.
+     from `BountywellApp` (Android), `main()` (Wasm), and (TODO) iOS launcher.
 
 ## Runtime verification done this session
 - **Wasm proven end-to-end** in headless Chrome (puppeteer-core + /usr/bin/google-chrome):
