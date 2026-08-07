@@ -4,6 +4,11 @@ A local-first food and wellness checklist with customizable plans, built as a
 **Compose Multiplatform** app that shares both logic *and* UI across Android,
 iOS, and the web (Wasm).
 
+> Bountywell ships with a checklist based on the twelve food groups popularized
+> by Dr. Michael Greger's Daily Dozen ([NutritionFacts.org](https://nutritionfacts.org/daily-dozen/)),
+> used with Dr. Greger's written permission (granted 2026-08-07). It is not
+> affiliated with or endorsed by Dr. Greger or NutritionFacts.org.
+
 > Portfolio contrast: Bountywell shares logic **and** UI via Compose
 > Multiplatform; Cascade shares only logic via a Rust core with native shells —
 > two multiplatform architectures chosen to fit each app's needs.

@@ -36,7 +36,7 @@ import page.stephens.bountywell.ui.theme.Harvest
 /**
  * A category card. Collapsed it's a single row — emoji halo, the (linked) name,
  * and the serving chips. Tapping the name expands the card to reveal the sample
- * serving sizes and any "more info" links.
+ * serving sizes and "more info" links (NutritionFacts.org).
  */
 @Composable
 fun CategoryRow(

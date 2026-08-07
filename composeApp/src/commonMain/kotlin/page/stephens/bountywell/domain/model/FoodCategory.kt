@@ -1,16 +1,15 @@
 package page.stephens.bountywell.domain.model
 
-/** A "more info" link for a category. */
+/** A "more info" link for a category (NutritionFacts.org topic). */
 data class CategoryLink(val label: String, val url: String)
 
 /**
- * One food category from the master list (SYNC_CONTRACT.md §4).
+ * One Daily Dozen category from the master list (SYNC_CONTRACT.md §4).
  *
  * Pure domain model — no Compose, no platform dependencies. [id] is the exact
  * hyphenated id the web backend uses (sync breaks on any underscore); [name],
  * [emoji], [description] (sample serving sizes), and [infoLinks] are UI-only and
- * not part of the synced blob. [infoLinks] currently ships empty — the catalog
- * carries no external references.
+ * not part of the synced blob.
  */
 data class FoodCategory(
     val id: String,
@@ -18,6 +17,6 @@ data class FoodCategory(
     val emoji: String,
     /** Sample serving sizes, shown when the user expands the card. */
     val description: String = "",
-    /** "More info" links, shown when the card is expanded. */
+    /** "More info" links (NutritionFacts.org), shown when the card is expanded. */
     val infoLinks: List<CategoryLink> = emptyList(),
 )

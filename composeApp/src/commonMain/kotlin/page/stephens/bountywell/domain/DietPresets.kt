@@ -26,7 +26,7 @@ object DietPresets {
     }
 
     //                                            beans protein berries o-fruits greens cruci o-veg flax nuts herbs grains bev exer
-    val standard = preset("standard", "Standard"           ,        3,  0,  1,  3,  2,  1,  2,  1,  1,  1,  3,  5,  1)
+    val standard = preset("standard", "Daily Dozen–inspired",        3,  0,  1,  3,  2,  1,  2,  1,  1,  1,  3,  5,  1)
     val modified = preset("modified", "Modified",                    0,  2,  1,  3,  2,  1,  2,  0,  1,  1,  3,  5,  1)
     val oneBean = preset("one-bean", "One Bean",                     1,  1,  1,  3,  2,  1,  2,  0,  1,  1,  3,  5,  1)
     val oneBeanTwoProtein = preset("one-bean-two-protein", "One Bean + Two Protein",
